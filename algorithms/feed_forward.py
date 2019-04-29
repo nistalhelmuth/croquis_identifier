@@ -1,19 +1,17 @@
 import numpy as np
-import math
 
 def sigmoidfunc(x):
-    return 1/(1 + math.exp(-x))
+    return 1.0/(1 + np.exp(-x))
 
-sigmoid = np.vectorize(sigmoidfunc)
+def newsigmoid(x):
+    return 1/(1 + np.exp(-10*x+5))
+  
+def othersigmoid(x):
+    return 1/(1 + np.exp(-0.01*x))
 
-def feed_forward(X, theta1, theta2): #tres capas (una oculta)
-    A1 = np.vstack((
-        1,
-        X
-    ))
-    A2 = np.vstack((
-        1,
-        sigmoid(np.sum(np.matmul(theta1,A1.T), axis = 1, keepdims = True))
-    ))
-    A3 = sigmoid(np.sum( np.matmul(theta2,A2.T), axis = 1, keepdims = True))
-    return (A1, A2, A3)
+def feed_forward_bias(X, thetas): #tres capas (una oculta)
+    A1 = np.vstack((1,X))
+    A2 = np.vstack((1,sigmoidfunc(np.matmul(thetas[0],A1))))
+    A3 = np.vstack((1,sigmoidfunc(np.matmul(thetas[1],A2))))
+    A4 = sigmoidfunc(np.matmul(thetas[2],A3))
+    return (A1, A2, A3, A4)
