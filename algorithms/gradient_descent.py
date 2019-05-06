@@ -5,7 +5,7 @@ norm = lambda v: ((v ** 2 ).sum()) ** 0.5
 
 def gradient_descent(
     thetas,
-    alpha=0.00001,
+    alpha=0.0000001,
     treshold=1,
     max_iter=1000
     ):
