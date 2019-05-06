@@ -14,30 +14,24 @@ def calculate_phi(A, y, thetas):
     delta2 = np.matmul(A[2][1:], phis[1].T)
     delta1 = np.matmul(A[1][1:], phis[0].T)
 
-    return np.array((delta1, delta2, delta3))
+    return (delta1, delta2, delta3)
 
-# x: imagen para entrenar [tamaño de imagen, cantidad de imagenes]
-# thetas: pesos asignados (arreglo de pesos)
-# y: lo que debería de ser [diez, cantidad de imagenes]
-# return: costo (arreglo de cambios de peso)
-def calculate_deltas(x, y, thetas):
-    A = feed_forward(x.reshape(-1,1), thetas)
-    deltas = calculate_phi(A, y.reshape(-1,1),thetas)
-    return deltas
+def cost_and_gradient(thetas):
+    theta1 = np.zeros(thetas[0].shape)
+    theta2 = np.zeros(thetas[1].shape)
+    theta3 = np.zeros(thetas[2].shape)
+    gradient = (theta1, theta2, theta3)
 
-def cost_and_gradient(X, spected_results, thetas):
-    np.vectorize(calculate_deltas)
-    #new_thetas = calculate_deltas(X,spected_results,thetas).sum(axis=0)
-
-    theta1 = np.zeros((10,785))
-    theta2 = np.zeros((10,11))
-    theta3 = np.zeros((3,11))
-    new_thetas = np.array([theta1, theta2, theta3])
-    X_split = np.split(X,3)
-    for i in range(0,3):#cuantas categorias
-        for o in range(0,20):#imagen por categoria
-            new_thetas += np.apply_along_axis(calculate_deltas, 1,X_split[i],spected_results.T[i*2+o],thetas).sum(axis=0)
-    
+    with open('../csvFiles/results.csv') as results_file:
+        with open('../csvFiles/trainimages.csv') as images_file:
+            results_lines=results_file.readlines()
+            image_lines=images_file.readlines()
+            for i in range(0,len(image_lines)):
+                spected_result = np.fromstring(results_lines[i], dtype=float, sep=',')
+                image = np.fromstring(image_lines[i], dtype=float, sep=',')
+                A = feed_forward(image.reshape(-1,1), thetas)
+                deltas = calculate_phi(A, spected_result.reshape(-1,1),thetas)
+                gradient = (gradient[0]+deltas[0],gradient[1]+deltas[1],gradient[2]+deltas[2])
     #new_thetas = np.apply_along_axis(calculate_deltas, 1,X,spected_results[0],thetas).sum(axis=0)
-    return new_thetas
+    return gradient
 
