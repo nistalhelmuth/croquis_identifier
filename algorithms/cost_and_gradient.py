@@ -2,23 +2,26 @@ import numpy as np
 from feed_forward import feed_forward
 
 def dRelu(x):
-    return x/x
+    return 1 * (x>0)
 
 def calculate_phi(A, y, thetas):
     phi4 = (y - A[4])
-    phi3 = np.matmul( thetas[3].T, phi4 ) * (A[3]) * (1-A[3]) 
-    #phi3 = np.matmul( thetas[3].T, phi4 ) * (dRelu(A[3]))
-    #phi3 = np.matmul( thetas[3].T, phi4) * (-1/n) * log(A[3])
+    #phi3 = np.matmul( thetas[3].T, phi4 ) *  dRelu(A[3])
+    phi3 = np.matmul( thetas[3].T, phi4) * (A[3]) * (1-A[3]) 
     phi2 = np.matmul( thetas[2].T, phi3[1:] ) * (A[2]) * (1-A[2]) 
     phi1 = np.matmul( thetas[1].T, phi2[1:] ) * (A[1]) * (1-A[1]) 
     phi0 = np.matmul( thetas[0].T, phi1[1:] ) * (A[0]) * (1-A[0])
-    phis = (phi0,phi1,phi2,phi3)
+    phis = (phi0,phi1,phi2,phi3,phi4)
 
     #update_delta
-    delta4 = np.matmul(A[4], phis[3].T)
-    delta3 = np.matmul(A[3][1:], phis[2].T)
-    delta2 = np.matmul(A[2][1:], phis[1].T)
-    delta1 = np.matmul(A[1][1:], phis[0].T)
+    #delta4 = np.matmul(A[4], phis[3].T)
+    #delta3 = np.matmul(A[3][1:], phis[2].T)
+    #delta2 = np.matmul(A[2][1:], phis[1].T)
+    #delta1 = np.matmul(A[1][1:], phis[0].T)
+    delta4 = np.matmul(phis[4],A[3].T)
+    delta3 = np.matmul(phis[3][1:],A[2].T)
+    delta2 = np.matmul(phis[2][1:],A[1].T)
+    delta1 = np.matmul(phis[1][1:],A[0].T)
 
     return (delta1, delta2, delta3, delta4)
 
