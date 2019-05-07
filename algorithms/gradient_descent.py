@@ -14,12 +14,7 @@ def gradient_descent(
     while i < max_iter and normalization >= treshold:
         print('iteration: ',i)
         gradient = cost_and_gradient(thetas)
-        thetas = (
-            thetas[0] + alpha * gradient[0],
-            thetas[1] + alpha * gradient[1],
-            thetas[2] + alpha * gradient[2],
-            thetas[3] + alpha * gradient[3]
-            )
+        thetas = thetas + alpha * gradient
         normalization = norm(np.hstack((gradient[0].ravel(),gradient[1].ravel(),gradient[2].ravel(),gradient[3].ravel())))
         print(normalization)
         i += 1

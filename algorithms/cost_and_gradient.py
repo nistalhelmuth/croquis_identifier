@@ -11,26 +11,21 @@ def calculate_phi(A, y, thetas):
     phi2 = np.matmul( thetas[2].T, phi3[1:] ) * (A[2]) * (1-A[2]) 
     phi1 = np.matmul( thetas[1].T, phi2[1:] ) * (A[1]) * (1-A[1]) 
     phi0 = np.matmul( thetas[0].T, phi1[1:] ) * (A[0]) * (1-A[0])
-    phis = (phi0,phi1,phi2,phi3,phi4)
 
     #update_delta
-    #delta4 = np.matmul(A[4], phis[3].T)
-    #delta3 = np.matmul(A[3][1:], phis[2].T)
-    #delta2 = np.matmul(A[2][1:], phis[1].T)
-    #delta1 = np.matmul(A[1][1:], phis[0].T)
-    delta4 = np.matmul(phis[4],A[3].T)
-    delta3 = np.matmul(phis[3][1:],A[2].T)
-    delta2 = np.matmul(phis[2][1:],A[1].T)
-    delta1 = np.matmul(phis[1][1:],A[0].T)
+    delta4 = np.matmul(phi4,A[3].T)
+    delta3 = np.matmul(phi3[1:],A[2].T)
+    delta2 = np.matmul(phi2[1:],A[1].T)
+    delta1 = np.matmul(phi1[1:],A[0].T)
 
-    return (delta1, delta2, delta3, delta4)
+    return np.array([delta1, delta2, delta3, delta4])
 
 def cost_and_gradient(thetas):
     theta1 = np.zeros(thetas[0].shape)
     theta2 = np.zeros(thetas[1].shape)
     theta3 = np.zeros(thetas[2].shape)
     theta4 = np.zeros(thetas[3].shape)
-    gradient = (theta1, theta2, theta3, theta4)
+    gradient = np.array([theta1, theta2, theta3, theta4])
 
     with open('../csvFiles/results.csv') as results_file:
         with open('../csvFiles/trainimages.csv') as images_file:
@@ -41,7 +36,6 @@ def cost_and_gradient(thetas):
                 image = np.fromstring(image_lines[i], dtype=float, sep=',')
                 A = feed_forward(image.reshape(-1,1), thetas)
                 deltas = calculate_phi(A, spected_result.reshape(-1,1),thetas)
-                gradient = (gradient[0]+deltas[0],gradient[1]+deltas[1],gradient[2]+deltas[2],gradient[3]+deltas[3])
-    #new_thetas = np.apply_along_axis(calculate_deltas, 1,X,spected_results[0],thetas).sum(axis=0)
+                gradient = gradient + deltas
     return gradient
 
