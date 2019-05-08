@@ -6,7 +6,7 @@ from PIL import Image
 import pandas as pd
 
 def binary(x):
-    if x:
+    if x<125:
         return 1
     return 0
 

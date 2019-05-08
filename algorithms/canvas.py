@@ -1,21 +1,30 @@
+import numpy as np
 from tkinter import *
 from PIL import Image, ImageDraw
+from feed_forward import feed_forward
 
-ITERATION 1
+ITERATION = 0
+
+def binary(x):
+    if x<125:
+        return 1
+    return 0
 
 def guess():
     with open('../csvFiles/thetas.csv') as thetas_file:
-        thetas_lines=thetas_file.readlines()
-        theta1 = np.fromstring(thetas_lines[ITERATION + 0], dtype=float, sep=',').reshape(10,785)
-        theta2 = np.fromstring(thetas_lines[ITERATION + 1], dtype=float, sep=',').reshape(10,11)
-        theta3 = np.fromstring(thetas_lines[ITERATION + 2], dtype=float, sep=',').reshape(10,11)
-        thetas = (theta1, theta2, theta2)
-        A = feed_forward(image.reshape(-1,1), thetas)
-        categories = [ 'Tree', 'Egg',  'MickeyMouse', 'SmileyFace', 'SadFace', 'Square', 'Triangle', 'House', 'Circle','QuestionMark']
-        print(A[3])
+        thetas_lines = thetas_file.readlines()
+        theta1 = np.fromstring(thetas_lines[ITERATION*4 + 0], dtype=float, sep=',').reshape(100,785)
+        theta2 = np.fromstring(thetas_lines[ITERATION*4 + 1], dtype=float, sep=',').reshape(50,101)
+        theta3 = np.fromstring(thetas_lines[ITERATION*4 + 2], dtype=float, sep=',').reshape(10,51)
+        theta4 = np.fromstring(thetas_lines[ITERATION*4 + 3], dtype=float, sep=',').reshape(10,11)
+        thetas = np.array([theta1, theta2, theta3, theta4])
+        content = Image.open('../testimg/image.bmp')
+        img = tobinary(np.array(content)[:,:,0].reshape(-1,1))
+        A = feed_forward(img,thetas)
+        print(A[4])
 
 def save():
-    filename = "image.bmp"
+    filename = "../testimg/image.bmp"
     image1.save(filename)
 
 def draw(event):
@@ -29,6 +38,7 @@ def draw(event):
 def release(event):
     canvas.old_coords = None
 
+tobinary = np.vectorize(binary)
 root = Tk()
 myflag = True
 canvas = Canvas(root, width=280, height=280)
