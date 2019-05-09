@@ -21,8 +21,8 @@ def cost_and_gradient(thetas):
     theta4 = np.zeros(thetas[3].shape)
     gradient = np.array([theta1, theta2, theta3, theta4])
 
-    with open('../csvFiles/results.csv') as results_file:
-        with open('../csvFiles/trainimages.csv') as images_file:
+    with open('../csvFiles/2000/trainresults.csv') as results_file:
+        with open('../csvFiles/2000/trainimages.csv') as images_file:
             results_lines=results_file.readlines()
             image_lines=images_file.readlines()
             for i in range(0,len(image_lines)):

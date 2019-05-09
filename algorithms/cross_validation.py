@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 from feed_forward import feed_forward
 
-ITERATION = 0
+ITERATION = 1
 
-with open('../csvFiles/thetas.csv') as thetas_file:
+with open('../csvFiles/prev_thetas.csv') as thetas_file:
     thetas_lines=thetas_file.readlines()
     theta1 = np.fromstring(thetas_lines[ITERATION*4 + 0], dtype=float, sep=',').reshape(100,785)
     theta2 = np.fromstring(thetas_lines[ITERATION*4 + 1], dtype=float, sep=',').reshape(50,101)
@@ -24,9 +24,6 @@ with open('../csvFiles/twickresults.csv') as results_file:
             image = np.fromstring(image_lines[i], dtype=float, sep=',')
             A = feed_forward(image.reshape(-1,1), thetas)
             if (np.argmax(A[3]) == np.argmax(spected_result)):
-                print(A[4])
-                print(spected_result)
-                input()
                 goods += 1
             else:
                 bads += 1
